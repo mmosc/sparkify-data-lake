@@ -1,3 +1,20 @@
+# Project Overview
+
+Data Lakes project of the Data Engineering Udacity Nanodegree.  
+
+## Introduction
+
+At Sparkify, our app allows the user to stream music. Our user base and song database have grown and we want to move the data warehouse to a data lake.
+
+Scope of this repo is to build an ETL Pipeline that 
+- extracts data from S3
+- processes them using Spark
+- loads them back into S3 as a set of dimensional tables.
+
+The Spark process is deployed on a cluster using AWS.
+
+The DB schema is chosen to optimize the queries of our analytics team, whose task is to understand what songs users are listening to. 
+
 ## Dataset
 Data reside in S3, in a directory of JSON logs on user activity on the app, as well as a directory with JSON metadata on the songs in their app. 
 
@@ -50,8 +67,24 @@ The diagram is generated using [Visual Paradigm](https://online.visual-paradigm.
 
 ## Usage
 
-### ETL pipeline
+To execute the pipeline and create the database in your S3 bucket, 
+- substitute your AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in the file ```dl.cfg```
+- create a cluster on AWS EMR
+- substitute your s3 bucket path in the variable ```output_data```
+- execute the file ```etl.py``` on the cluster
 
+### ETL pipeline
+The ETL pipeline consists of two main steps, executing the functions ```process_song_data``` and ```process_log_data```
+
+#### Process Song Data
+This function processes song data by iterating over the .json files in the input folder and creates ```songs``` and ```artists``` tables. Then writes the tables to the S3 bucket given in the ```output_data```.
+
+The function 
+- reads the ```.json``` files into a Spark DataFrame. 
+- From this DataFrame, an SQL query extracts the table ```songs_table```. When writing to S3, the files are partitioned by year and artist.
+- From the original DataFrame, an SQL query extracts the table ```artists_table```.
+
+#### Process Log Data
 
 ### Queries
 Example queries for each of the tables can be found in the ```test.ipynb``` file. As additional example, here's a query for checking on which day of the week a specific song, displayed by title, was played
