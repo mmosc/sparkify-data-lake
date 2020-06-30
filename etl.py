@@ -113,7 +113,7 @@ def process_log_data(spark, input_data, output_data, aws=False):
     """
     Process log and song data by iterating over the 
     - the .json files in the log_data folder
-    - the song_data folder in the input_data folder. 
+    - the .json files in the song_data folder. 
     
     Creates the users, times and songplays tables.
     If aws is True, writes the tables to the S3 bucket 

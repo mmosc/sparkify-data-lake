@@ -85,9 +85,17 @@ The function
 - From the original DataFrame, an SQL query extracts the table ```artists_table```.
 
 #### Process Log Data
+This function processes log data by iterating over the .json files in the input folder and creates ```users```,```times``` and ```songplays``` tables. Then writes the tables to the S3 bucket given in the ```output_data```.
+
+The function 
+- reads the log activities stored in the ```.json``` files into a Spark DataFrame. 
+- filters out the activity not related to songplay events.
+- From this DataFrame, an SQL query extracts the table ```users_table```, dropping duplicate events to prevent double insertion. 
+- To create the ```times_table```, from the timestamp, information are estracted regarding event time, year, month, day, weekday and hour. When writing to S3, the files are partitioned by year and month.
+- To create the ```songplays``` table, also data from the ```.json```files of the song are read. These are then joined to data from the activity log, to create the songplays_table. Finally, to each row in this table a unique ID is assigned. When writing to S3, the files are partitioned by year and month.
 
 ### Queries
-Example queries for each of the tables can be found in the ```test.ipynb``` file. As additional example, here's a query for checking on which day of the week a specific song, displayed by title, was played
+Here's a query for checking on which day of the week a specific song, displayed by title, was played
 ```
 SELECT  s.title, t.weekday 
 FROM songplays AS sp JOIN songs AS s ON sp.song_id=s.song_id
