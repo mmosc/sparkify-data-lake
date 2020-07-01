@@ -26,7 +26,7 @@ def create_spark_session():
     return spark
 
 
-def process_song_data(spark, input_data, output_data, aws=False):
+def process_song_data(spark, input_data, output_data, aws=True):
     """
     Process song data by iterating over the .json files in
     the song_data folder in the input_data folder. 
@@ -103,13 +103,13 @@ def process_song_data(spark, input_data, output_data, aws=False):
     # write artists table to parquet files
     if aws:
         print("Writing the artists table to parquet files ...\n")
-        artists_table.wtiteparquet(output_data + "artists_table.parquet",
+        artists_table.write.parquet(output_data + "artists_table.parquet",
                                   mode = "overwrite")
         print("done.")
 
 
 
-def process_log_data(spark, input_data, output_data, aws=False):   
+def process_log_data(spark, input_data, output_data, aws=True):   
     """
     Process log and song data by iterating over the 
     - the .json files in the log_data folder
@@ -227,6 +227,8 @@ def process_log_data(spark, input_data, output_data, aws=False):
     print("Extract columns to create songplays table...")
     songplays_table = spark.sql('''
         SELECT 
+            year(l.ts) AS year,
+            month(l.ts) AS month,
             l.ts AS start_time,
             l.userId AS user_id,
             l.level,
@@ -258,12 +260,14 @@ def process_log_data(spark, input_data, output_data, aws=False):
 
 def main():
     spark = create_spark_session()
-    #input_data = "s3a://udacity-dend/"
-    input_data = "./data/"
+    input_data = "s3a://udacity-dend/"
+    #input_data = "./data/"
     output_data = "s3a://sparkify-udacity/"
     
-    process_song_data(spark, input_data, output_data, aws=False)    
-    process_log_data(spark, input_data, output_data, aws=False)
+    process_song_data(spark, input_data, output_data#, aws=False
+                     )    
+    process_log_data(spark, input_data, output_data#, aws=False
+                    )
 
 
 if __name__ == "__main__":

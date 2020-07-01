@@ -93,7 +93,7 @@ The function
 - From this DataFrame, an SQL query extracts the table ```users_table```, dropping duplicate events to prevent double insertion. 
 - To create the ```times_table```, from the timestamp, information are estracted regarding event time, year, month, day, weekday and hour. When writing to S3, the files are partitioned by year and month.
 - To create the ```songplays``` table, also data from the ```.json```files of the song are read. These are then joined to data from the activity log, to create the songplays_table. Finally, to each row in this table a unique ID is assigned. When writing to S3, the files are partitioned by year and month.
-
+<!--
 ### Queries
 Here's a query for checking on which day of the week a specific song, displayed by title, was played
 ```
@@ -105,4 +105,4 @@ FROM songplays AS sp JOIN songs AS s ON sp.song_id=s.song_id
 This should return 
 | title         | weekday       |
 | ------------- |:-------------:| 
-| If I Ain't Got You|Monday              |
+| If I Ain't Got You|Monday              |-->
